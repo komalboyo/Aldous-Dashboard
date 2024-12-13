@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path'); // Ensure the path module is imported
+const fs = require('fs'); // Ensure fs module is imported
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
@@ -54,6 +56,18 @@ app.get('/api/chat-records', async (req, res) => {
       details: error.message 
     });
   }
+});
+
+// API to fetch PDF files
+app.get('/get-pdfs', (req, res) => {
+  const pdfDir = path.join(__dirname, 'public/pdfs'); // Resolving the full path to the PDF folder
+  fs.readdir(pdfDir, (err, files) => {
+      if (err) {
+          return res.status(500).json({ error: 'Unable to scan files' });
+      }
+      const pdfFiles = files.filter(file => file.endsWith('.pdf')); // Only return PDF files
+      res.json(pdfFiles);
+  });
 });
 
 app.listen(port, () => {
