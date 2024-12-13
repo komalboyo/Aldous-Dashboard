@@ -4,54 +4,128 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchChatRecords() {
     try {
-        console.log('Attempting to fetch chat records...');
-        
         const response = await fetch('/api/chat-records');
-        
-        console.log('Response status:', response.status);
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Error response:', errorText);
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok: ' + errorText);
         }
         
         const chatRecords = await response.json();
-        
-        console.log('Received chat records:', chatRecords);
-        
         displayChatRecords(chatRecords);
     } catch (error) {
-        console.error('Comprehensive Error:', error);
-        
-        // Display error on the page
-        const container = document.getElementById('chatRecords');
-        container.innerHTML = `
-            <div style="color: red;">
-                <h2>Error Fetching Records</h2>
-                <p>${error.message}</p>
-            </div>
-        `;
+        displayErrorMessage(error.message);
     }
+}
+
+function displayErrorMessage(message) {
+    const container = document.getElementById('chatRecords');
+    container.innerHTML = `
+        <div class="no-records">
+            <h2>Error Fetching Records</h2>
+            <p>${message}</p>
+        </div>
+    `;
+}
+
+function parseTimestamp(timestamp) {
+    // Handle different possible timestamp formats
+    if (timestamp && timestamp.$date) {
+        // MongoDB-style timestamp
+        const longValue = timestamp.$date.$numberLong || timestamp.$date;
+        return new Date(parseInt(longValue));
+    }
+    if (typeof timestamp === 'number') {
+        // Numeric timestamp
+        return new Date(timestamp);
+    }
+    if (timestamp instanceof Date) {
+        // Already a Date object
+        return timestamp;
+    }
+    // If all else fails, return current date
+    return new Date();
 }
 
 function displayChatRecords(chatRecords) {
     const container = document.getElementById('chatRecords');
     container.innerHTML = ''; // Clear previous content
 
-    if (chatRecords.length === 0) {
-        container.innerHTML = '<p>No records found.</p>';
+    if (!chatRecords || chatRecords.length === 0) {
+        container.innerHTML = '<div class="no-records">No chat records found.</div>';
         return;
     }
 
     chatRecords.forEach((record, index) => {
-        const recordDiv = document.createElement('div');
-        recordDiv.className = 'record';
+        const sessionDiv = document.createElement('div');
+        sessionDiv.className = 'chat-session';
 
-        const recordText = document.createElement('pre');
-        recordText.textContent = JSON.stringify(record, null, 2);
+        // Safely parse created_at timestamp
+        let createdAt = 'Unknown Date';
+        try {
+            createdAt = parseTimestamp(record.created_at).toLocaleString();
+        } catch (error) {
+            console.warn('Could not parse created_at timestamp', error);
+        }
 
-        recordDiv.appendChild(recordText);
-        container.appendChild(recordDiv);
+        // Create session header
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'session-header';
+        headerDiv.innerHTML = `
+            <h3>Chat Session ${index + 1}</h3>
+            <span>${createdAt}</span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+        `;
+
+        // Create QA pairs container
+        const qaPairsDiv = document.createElement('div');
+        qaPairsDiv.className = 'qa-pairs';
+
+        // Safely handle qa_pairs
+        if (record.qa_pairs && Array.isArray(record.qa_pairs)) {
+            record.qa_pairs.forEach(qa => {
+                const qaPairDiv = document.createElement('div');
+                qaPairDiv.className = 'qa-pair';
+
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.textContent = `Q: ${qa.question || 'No question found'}`;
+
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer';
+                answerDiv.textContent = `A: ${qa.answer || 'No answer found'}`;
+
+                // Safely parse timestamp for each QA pair
+                let qaTimestamp = 'Unknown Timestamp';
+                try {
+                    qaTimestamp = parseTimestamp(qa.timestamp).toLocaleString();
+                } catch (error) {
+                    console.warn('Could not parse QA pair timestamp', error);
+                }
+
+                const timestampDiv = document.createElement('div');
+                timestampDiv.className = 'timestamp';
+                timestampDiv.textContent = qaTimestamp;
+
+                qaPairDiv.appendChild(questionDiv);
+                qaPairDiv.appendChild(answerDiv);
+                qaPairDiv.appendChild(timestampDiv);
+
+                qaPairsDiv.appendChild(qaPairDiv);
+            });
+        } else {
+            qaPairsDiv.innerHTML = '<div class="no-records">No Q&A pairs found for this session.</div>';
+        }
+
+        // Add event listener to toggle QA pairs
+        headerDiv.addEventListener('click', () => {
+            headerDiv.classList.toggle('active');
+            qaPairsDiv.style.display = 
+                qaPairsDiv.style.display === 'block' ? 'none' : 'block';
+        });
+
+        sessionDiv.appendChild(headerDiv);
+        sessionDiv.appendChild(qaPairsDiv);
+        container.appendChild(sessionDiv);
     });
 }
