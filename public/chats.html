@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat History</title>
+    <style>
+        .chat-session {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .chat-details {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+        .session-header {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        /* Center the logo container */
+        .logo-container {
+            display: flex;
+            justify-content: center;  /* Centers the logo horizontally */
+            align-items: center;      /* Centers the logo vertically (optional) */
+            margin-top: 20px;         /* Adjust the top margin as needed */
+        }
+        
+        /* Make the logo smaller */
+        .logo {
+            max-width: 150px;  /* Adjust the max-width as per your logo size */
+            height: auto;      /* Maintain aspect ratio */
+        }
+  
+    </style>
+</head>
+<body>
+    <!-- Add the company logo at the top center -->
+    <div class="logo-container">
+        <img src="images/Aldous Logo.png" alt="Company Logo" class="logo">
+    </div>
+
+    <h1>Chat History</h1>
+    <div id="chatRecords"></div>
+
+    <script src="chats.js"></script>
+</body>
+</html>

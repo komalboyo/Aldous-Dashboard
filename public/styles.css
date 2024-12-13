@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-container, .dashboard, .chats-container {
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+input, button {
+    margin: 10px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.session {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.qa-pair {
+    margin: 10px 0;
+}
+/* Center the logo container */
+.logo-container {
+    display: flex;
+    justify-content: center;  /* Centers the logo horizontally */
+    align-items: center;      /* Centers the logo vertically (optional) */
+    margin-top: 20px;         /* Adjust the top margin as needed */
+  }
+  
+  /* Make the logo smaller */
+  .logo {
+    max-width: 150px;  /* Adjust the max-width as per your logo size */
+    height: auto;      /* Maintain aspect ratio */
+  }
+  
