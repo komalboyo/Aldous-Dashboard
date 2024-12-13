@@ -1,50 +1,99 @@
+/* Updated styles.css */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Match the dark background from the image */
+    color: white;
     margin: 0;
     padding: 0;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.logo {
+    max-width: 120px; /* Keep logo proportional */
+}
+
+button {
+    font-family: 'Arial', sans-serif;
+    background-color: #006e65; /* Button color as in the image */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #007f78; /* Slightly lighter hover color */
+}
+
+h1, h2 {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Inputs styling */
+input[type="text"], input[type="password"] {
+    background-color: #1c1c1c; /* Match dark theme */
+    color: white;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%;
     box-sizing: border-box;
 }
 
-.login-container, .dashboard, .chats-container {
+input[type="text"]:focus, input[type="password"]:focus {
+    border: 1px solid #006e65;
+    outline: none;
+}
+
+/* General container styles */
+.login-container, .dashboard {
+    background-color: #1c1c1c;
+    border-radius: 15px;
+    padding: 20px;
     max-width: 400px;
-    margin: 50px auto;
+    margin: auto;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-input, button {
-    margin: 10px;
+/* Dashboard-specific styles */
+.dashboard button {
+    display: inline-block;
+    width: 150px;
+}
+
+/* Chat-specific styles */
+.chat-session {
+    background-color: #1c1c1c; /* Match the darker theme */
+    border: 1px solid #333;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.session-header {
+    background-color: #006e65; /* Primary accent color */
+    color: white;
     padding: 10px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.error {
-    color: red;
-    font-size: 12px;
-}
-
-.session {
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.qa-pair {
-    margin: 10px 0;
-}
-/* Center the logo container */
-.logo-container {
+    cursor: pointer;
+    border-radius: 8px;
     display: flex;
-    justify-content: center;  /* Centers the logo horizontally */
-    align-items: center;      /* Centers the logo vertically (optional) */
-    margin-top: 20px;         /* Adjust the top margin as needed */
-  }
-  
-  /* Make the logo smaller */
-  .logo {
-    max-width: 150px;  /* Adjust the max-width as per your logo size */
-    height: auto;      /* Maintain aspect ratio */
-  }
-  
+    justify-content: space-between;
+}
+
+.session-header:hover {
+    background-color: #007f78; /* Hover color */
+}
