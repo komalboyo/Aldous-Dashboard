@@ -28,25 +28,6 @@ function displayErrorMessage(message) {
     `;
 }
 
-function parseTimestamp(timestamp) {
-    // Handle different possible timestamp formats
-    if (timestamp && timestamp.$date) {
-        // MongoDB-style timestamp
-        const longValue = timestamp.$date.$numberLong || timestamp.$date;
-        return new Date(parseInt(longValue));
-    }
-    if (typeof timestamp === 'number') {
-        // Numeric timestamp
-        return new Date(timestamp);
-    }
-    if (timestamp instanceof Date) {
-        // Already a Date object
-        return timestamp;
-    }
-    // If all else fails, return current date
-    return new Date();
-}
-
 function displayChatRecords(chatRecords) {
     const container = document.getElementById('chatRecords');
     container.innerHTML = ''; // Clear previous content
@@ -60,13 +41,8 @@ function displayChatRecords(chatRecords) {
         const sessionDiv = document.createElement('div');
         sessionDiv.className = 'chat-session';
 
-        // Safely parse created_at timestamp
-        let createdAt = 'Unknown Date';
-        try {
-            createdAt = parseTimestamp(record.created_at).toLocaleString();
-        } catch (error) {
-            console.warn('Could not parse created_at timestamp', error);
-        }
+        // Parse the provided timestamp format
+        const createdAt = new Date(record.created_at).toLocaleString();
 
         // Create session header
         const headerDiv = document.createElement('div');
@@ -81,7 +57,6 @@ function displayChatRecords(chatRecords) {
         const qaPairsDiv = document.createElement('div');
         qaPairsDiv.className = 'qa-pairs';
 
-        // Safely handle qa_pairs
         if (record.qa_pairs && Array.isArray(record.qa_pairs)) {
             record.qa_pairs.forEach(qa => {
                 const qaPairDiv = document.createElement('div');
@@ -95,13 +70,8 @@ function displayChatRecords(chatRecords) {
                 answerDiv.className = 'answer';
                 answerDiv.textContent = `A: ${qa.answer || 'No answer found'}`;
 
-                // Safely parse timestamp for each QA pair
-                let qaTimestamp = 'Unknown Timestamp';
-                try {
-                    qaTimestamp = parseTimestamp(qa.timestamp).toLocaleString();
-                } catch (error) {
-                    console.warn('Could not parse QA pair timestamp', error);
-                }
+                // Parse the provided timestamp format for each QA pair
+                const qaTimestamp = new Date(qa.timestamp).toLocaleString();
 
                 const timestampDiv = document.createElement('div');
                 timestampDiv.className = 'timestamp';
